@@ -76,8 +76,11 @@ word_df = pd.DataFrame(word_counts.items(), columns=['word', 'count'])
 word_df = word_df.sort_values(by='count', ascending=False).reset_index(drop=True)
 
 # Importing and remove stop word
-nltk.download('stopwords')
-stop_words = set(stopwords.words('english'))
+try:
+    stop_words = set(stopwords.words('english'))
+except LookupError:
+    nltk.download('stopwords')
+    stop_words = set(stopwords.words('english'))
 word_df = word_df[~word_df['word'].isin(stop_words)]
 
 # Getting AFINN sentiment lexicon
@@ -99,13 +102,14 @@ merged_df['total_sentiment'] = merged_df['count'] * merged_df['sentiment']
 
 pd.set_option('display.max_rows', None)
 print(merged_df)
-pd.reset_option('display.max_rows')
+pd.reset_option('display.max_rows', silent=True)
+
 
 total_sentiment = merged_df['total_sentiment'].sum()
 if total_sentiment > 25:
     result = "happy :)"
 else:
-    result = "sad :(",
+    result = "sad :("
 
 print(f"Estimated song sentiment: {total_sentiment}")
 print(f"The song seems to be: {result}")
