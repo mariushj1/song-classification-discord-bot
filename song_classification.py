@@ -12,7 +12,7 @@ from nltk.corpus import stopwords
 load_dotenv()
 
 # Define the youtube link and id
-yt_url = "https://www.youtube.com/watch?v=oofSnsGkops"
+yt_url = "https://www.youtube.com/watch?v=Kua2dDhqzZw"
 yt_id = re.search(r"(?:v=)([a-zA-Z0-9_-]{11})", yt_url)
 yt_id = yt_id.group(1)
 
@@ -91,7 +91,7 @@ with open(file_path, 'r') as f:
 
 afinn_df = pd.DataFrame(afinn_data, columns=['word', 'sentiment'])
 # Manually edit words
-afinn_df = afinn_df[afinn_df['word'] != 'love']
+afinn_df = afinn_df[~afinn_df['word'].isin(['love', 'loved'])]
 
 # Joining on lyrics df to get word sentiment
 merged_df = pd.merge(word_df, afinn_df, on='word', how='left')
@@ -102,4 +102,10 @@ print(merged_df)
 pd.reset_option('display.max_rows')
 
 total_sentiment = merged_df['total_sentiment'].sum()
+if total_sentiment > 25:
+    result = "happy :)"
+else:
+    result = "sad :(",
+
 print(f"Estimated song sentiment: {total_sentiment}")
+print(f"The song seems to be: {result}")
