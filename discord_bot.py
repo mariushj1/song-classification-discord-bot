@@ -23,6 +23,25 @@ GENIUS_ACCESS_TOKEN = os.getenv("GENIUS_ACCESS_TOKEN")
 genius = lyricsgenius.Genius(GENIUS_ACCESS_TOKEN)
 genius.timeout = 30
 
+# Defining function to search youtube
+def getTopYoutubeVideoLink(query, api_key):
+    url = 'https://www.googleapis.com/youtube/v3/search'
+    params = {
+        'part': 'snippet',
+        'q': query,
+        'type': 'video',
+        'maxResults': 1,
+        'key': api_key
+    }
+    response = response.get(url, parameters)
+    data = response.json()
+
+    if 'items' in data and data['items']:
+        video_id = data['data'][0]['id']['videoId']
+        return f"https://youtube.com/watch?v={video_id}"
+    else:  
+        return None
+
 # Load AFINN data
 afinn_data = []
 with open("AFINN-111.txt", 'r') as f:
