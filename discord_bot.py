@@ -33,11 +33,11 @@ def getTopYoutubeVideoLink(query, api_key):
         'maxResults': 1,
         'key': api_key
     }
-    response = response.get(url, parameters)
+    response = requests.get(url, params)
     data = response.json()
 
     if 'items' in data and data['items']:
-        video_id = data['data'][0]['id']['videoId']
+        video_id = data['items'][0]['id']['videoId']
         return f"https://youtube.com/watch?v={video_id}"
     else:  
         return None
